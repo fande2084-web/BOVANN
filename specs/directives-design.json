@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "project": "OCD Live",
+    "document": "Règles et directives de design — inspirées du mur du studio",
+    "version": "1.0",
+    "date": "2026-11-08",
+    "author": "KEN Digital Services",
+    "source": "Analyse de la photo du studio (mur blanc, carte de l'Afrique rétroéclairée, logo OCD Live en relief, sol carrelé réfléchissant)",
+    "usage": "Référence pour tout visuel OCD Live : site web, réseaux sociaux, affiches, signalétique, images générées par IA. Réutilisable dans Claude Code (placer sous specs/directives-design.json).",
+    "corrections": [
+      "La marque s'écrit OCD Live (et non « OCP Live » comme dans l'analyse automatique de l'image).",
+      "L'orange officiel reste #E36802, relevé sur le fichier du logo. Le #E95B0A de la photo est l'orange modifié par l'éclairage du studio : il sert seulement de référence pour les photos et les rendus 3D."
+    ]
+  },
+
+  "concept": {
+    "name": "La lumière sur le vendeur",
+    "idea": "Le studio dit tout : un grand mur calme, une seule chose éclairée au centre, une lumière chaude qui attire le regard. Chaque design OCD Live reprend cette mise en scène : beaucoup d'espace, un seul point focal, une lumière dorée qui le met en valeur.",
+    "keywords": ["minimaliste", "premium", "chaleureux", "institutionnel", "lumineux", "panafricain"],
+    "promise": "Vendre partout en Afrique, en pleine lumière."
+  },
+
+  "principles": [
+    { "id": "P1", "name": "Un seul héros par visuel", "rule": "Chaque visuel a un seul point focal (le produit, le vendeur, le logo ou le titre). Tout le reste est au service de ce point.", "fromImage": "Le logo, seul au centre de la carte, sur un mur vide." },
+    { "id": "P2", "name": "Le vide est un luxe", "rule": "Au moins 40 % de la surface reste vide (mur blanc). Le vide n'est pas un manque : c'est ce qui rend le design premium.", "fromImage": "Le mur occupe la majeure partie de l'image." },
+    { "id": "P3", "name": "La lumière guide le regard", "rule": "Utiliser un halo doré chaud autour de l'élément principal plutôt qu'une ombre ou un cadre.", "fromImage": "Le contour LED doré autour de l'Afrique." },
+    { "id": "P4", "name": "Frontal et symétrique", "rule": "Compositions frontales, centrées ou alignées sur un axe clair. Pas de perspective oblique ni d'éléments penchés au hasard.", "fromImage": "Vue parfaitement frontale, composition symétrique." },
+    { "id": "P5", "name": "Trois couleurs, pas plus", "rule": "Blanc (fond) + orange (marque) + noir (texte). L'or n'apparaît que comme lumière, jamais comme aplat ou texte.", "fromImage": "Blanc perle, orange vif, noir profond, or lumineux." },
+    { "id": "P6", "name": "Le relief par la lumière, pas par les effets", "rule": "La profondeur vient de la lumière et d'ombres très douces. Interdits : biseaux, dégradés arc-en-ciel, contours épais, textures chargées.", "fromImage": "Logo en relief avec une légère ombre portée." },
+    { "id": "P7", "name": "L'Afrique comme signature", "rule": "La silhouette de l'Afrique (avec Madagascar) est l'élément graphique signature, utilisé en contour fin lumineux, jamais en aplat plein ni déformée.", "fromImage": "La carte rétroéclairée qui entoure le logo." }
+  ],
+
+  "palette": {
+    "brand": {
+      "orange": { "hex": "#E36802", "role": "Logo, accent principal, boutons", "share": "≈ 15 %" },
+      "black": { "hex": "#000000", "role": "Texte, « Live », titres", "share": "≈ 25 %" },
+      "white": { "hex": "#FFFFFF", "role": "Fond principal", "share": "≈ 60 %" }
+    },
+    "studio": {
+      "wall": { "hex": "#E9E8E9", "role": "Fond « mur du studio » pour les visuels premium et les photos détourées" },
+      "ledGold": { "hex": "#FFD45A", "role": "Contour lumineux, halo — en lumière uniquement (glow, ligne fine)" },
+      "warmGlow": { "hex": "#FFE5A1", "role": "Halo diffus autour du point focal" },
+      "floor": { "hex": "#D9D0C5", "role": "Socle, bas de visuel, reflets" },
+      "photoOrange": { "hex": "#E95B0A", "role": "Référence colorimétrique pour photos et rendus 3D uniquement" }
+    },
+    "support": {
+      "orangeDeep": { "hex": "#A84B00", "role": "Texte orange lisible, liens" },
+      "orangeSoft": { "hex": "#FDEBDB", "role": "Encarts, badges" },
+      "night": { "hex": "#0F0F0F", "role": "Version de nuit, fonds sombres" },
+      "liveRed": { "hex": "#C0261E", "role": "Badge EN DIRECT uniquement" }
+    },
+    "rules": [
+      "L'or (#FFD45A, #FFE5A1) ne sert jamais pour du texte, des boutons ou des aplats : seulement en lumière (halo, contour fin, reflet).",
+      "Pas de bleu, de vert ou de violet dans les lumières ou les fonds.",
+      "Orange #E36802 en texte uniquement à 24 px et plus ; en dessous, #A84B00.",
+      "Sur fond #E9E8E9, garder le texte en noir #000000 (contraste 17:1)."
+    ]
+  },
+
+  "composition": {
+    "grid": "Axe vertical central ; marges égales à gauche et à droite.",
+    "focalZone": "Le point focal se place dans le tiers supérieur à central, jamais collé aux bords.",
+    "verticalStructure": [
+      { "zone": "Haut (≈ 15 %)", "content": "Respiration : mur vide, éventuellement le badge EN DIRECT." },
+      { "zone": "Centre (≈ 50 %)", "content": "Le héros : logo, produit ou vendeur, entouré du halo ou du contour de l'Afrique." },
+      { "zone": "Bas du centre (≈ 15 %)", "content": "Le message : titre court en Archivo + une ligne en Inter." },
+      { "zone": "Bas (≈ 20 %)", "content": "Le socle : sol clair avec reflet doux, ou l'appel à l'action et le logo." }
+    ],
+    "margins": { "social": "8 % de la largeur minimum", "print": "10 mm minimum", "web": "gouttières de la charte (20 / 32 / 48 px)" },
+    "logoPlacement": "Centré dans la silhouette de l'Afrique pour les visuels signature ; en bas à gauche ou centré en bas pour les visuels produit. Toujours avec sa zone de protection.",
+    "formats": {
+      "storyReel": "1080 × 1920 — composition verticale du studio, héros au centre, texte dans le tiers bas",
+      "postCarre": "1080 × 1080 — héros centré, halo, titre en bas",
+      "postPortrait": "1080 × 1350 — format recommandé pour Facebook et Instagram",
+      "banniereWeb": "1920 × 800 — héros à droite, texte à gauche, mur clair",
+      "affiche": "A3 portrait — reprend exactement la composition de la photo du studio"
+    }
+  },
+
+  "lighting": {
+    "principle": "Une seule source de lumière chaude, placée derrière le point focal. Ambiance douce, jamais de contraste dur.",
+    "colorTemperature": "≈ 3 000 K (blanc chaud doré)",
+    "effects": {
+      "halo": {
+        "description": "Lueur diffuse derrière le héros",
+        "css": "background: radial-gradient(closest-side, rgba(255,229,161,0.55), rgba(227,104,2,0.08) 60%, transparent 80%); filter: blur(12px);"
+      },
+      "ledContour": {
+        "description": "Contour fin lumineux qui suit une forme (silhouette de l'Afrique, cadre de carte)",
+        "css": "stroke: #FFD45A; stroke-width: 1.5px; filter: drop-shadow(0 0 4px #FFD45A) drop-shadow(0 0 14px rgba(255,212,90,0.6));"
+      },
+      "relief": {
+        "description": "Légère profondeur sur le logo ou un élément posé sur le mur",
+        "css": "filter: drop-shadow(0 2px 2px rgba(0,0,0,0.12)) drop-shadow(0 8px 16px rgba(0,0,0,0.08));"
+      },
+      "floorReflection": {
+        "description": "Reflet doux sous le héros, sur le socle",
+        "css": "transform: scaleY(-1); opacity: 0.18; mask-image: linear-gradient(to bottom, #000, transparent 60%); filter: blur(2px);"
+      }
+    },
+    "rules": [
+      "Un seul halo par visuel.",
+      "Le halo ne recouvre jamais le texte.",
+      "Intensité modérée : si on remarque l'effet avant le contenu, il est trop fort.",
+      "Pas de néon, pas de lumière froide, pas d'effet « glow » sur le texte."
+    ]
+  },
+
+  "typography": {
+    "display": "Archivo 800–900, interlignage 0,95 à 1,05, approche −2 %",
+    "text": "Inter 400–600",
+    "hierarchy": [
+      "Titre : 3 à 6 mots maximum, en noir, un mot clé possible en orange.",
+      "Sous-titre : une ligne en Inter, gris #5C5752.",
+      "Appel à l'action : un verbe à l'impératif (« Réserve », « Rejoins »)."
+    ],
+    "rules": [
+      "Maximum 2 tailles de texte par visuel de réseau social.",
+      "Pas de texte sur le halo doré ni sur la silhouette de l'Afrique.",
+      "« Live » s'écrit toujours avec un L majuscule."
+    ]
+  },
+
+  "africaMotif": {
+    "description": "Silhouette fidèle du continent africain avec Madagascar à droite.",
+    "allowedUses": [
+      "Contour fin lumineux (ledContour) autour du logo ou d'un produit",
+      "Filigrane très léger (opacité 4 à 8 %) en fond",
+      "Trait orange fin dans une animation de dessin progressif"
+    ],
+    "forbiddenUses": [
+      "Silhouette déformée, simplifiée à l'excès ou sans Madagascar",
+      "Aplat plein orange ou noir",
+      "Remplissage avec une photo, un motif ou un drapeau",
+      "Rotation ou perspective"
+    ],
+    "asset": "/brand/africa-outline.svg (tracé vectoriel unique, contour continu, sans interruption)"
+  },
+
+  "photography": {
+    "style": "Photoréalisme architectural, haute définition, éclairage chaud et doux.",
+    "studioShots": [
+      "Cadrage frontal du mur, logo au centre.",
+      "Vendeur assis devant le mur, logo visible au-dessus de l'épaule.",
+      "Détail du logo en relief avec le halo doré.",
+      "Reflet doré sur le carrelage en plan rapproché (transition, fond de texte)."
+    ],
+    "productShots": "Produit posé sur fond #E9E8E9 ou blanc, une seule lumière chaude, ombre douce, reflet léger au sol.",
+    "rules": [
+      "Aucun mobilier, aucun décor ajouté dans le cadre du mur.",
+      "Balance des blancs chaude ; jamais de dominante bleue ou verte.",
+      "Retouche légère : pas de filtres Instagram, pas de vignettage marqué."
+    ]
+  },
+
+  "motion": {
+    "principle": "La lumière s'allume, elle ne clignote pas.",
+    "signatureAnimations": [
+      { "name": "Allumage du contour", "description": "Le contour de l'Afrique se dessine (stroke-dashoffset 100 % → 0) puis le halo apparaît en fondu.", "duration": "1 200 ms + 600 ms", "easing": "cubic-bezier(0.05, 0.7, 0.1, 1)" },
+      { "name": "Respiration du halo", "description": "Le halo varie très lentement d'intensité (opacité 0,85 ↔ 1).", "duration": "4 000 ms, en boucle", "easing": "ease-in-out" },
+      { "name": "Pose du logo", "description": "Le logo arrive de 12 px plus bas avec son ombre douce, comme posé sur le mur.", "duration": "spring (raideur 220, amortissement 28)" },
+      { "name": "Reflet au sol", "description": "Le reflet apparaît après le héros, en fondu, avec un léger décalage.", "duration": "450 ms, délai 300 ms" }
+    ],
+    "rules": [
+      "N'animer que l'opacité, la transformation et le tracé.",
+      "Une seule animation signature par écran.",
+      "Respecter prefers-reduced-motion : affichage direct de l'état final."
+    ]
+  },
+
+  "applications": {
+    "web": {
+      "hero": "Fond blanc, iPhone de démonstration avec halo chaud derrière ; photo du studio dans la section « Le studio ».",
+      "sectionSignature": "Une section pleine largeur fond #E9E8E9 avec la silhouette de l'Afrique en contour lumineux et le logo au centre.",
+      "cards": "Fond blanc, bordure #E6E2DD, ombre douce ; au survol, liseré orange et halo très léger."
+    },
+    "social": {
+      "annonceLive": "Fond mur #E9E8E9, contour de l'Afrique lumineux, photo du produit au centre, badge EN DIRECT en haut, date et heure en bas.",
+      "temoignage": "Photo du vendeur devant le mur, citation courte en Archivo, logo en bas.",
+      "promotion": "Fond blanc, prix en Archivo 900 orange, halo derrière le produit."
+    },
+    "print": {
+      "affiche": "Reproduction de la composition du studio, titre dans la zone basse.",
+      "carteDeVisite": "Recto blanc avec logo centré et halo imprimé en dorure ou en orange clair ; verso noir avec coordonnées."
+    },
+    "signage": "Logo en relief : monogramme orange #E36802 (laqué satiné), « Live » noir mat ; contour LED blanc chaud 3 000 K ; mur blanc cassé mat."
+  },
+
+  "aiImageGeneration": {
+    "positivePrompt": "Photographie architecturale photoréaliste, vue frontale symétrique, grand mur intérieur blanc cassé (#E9E8E9) mat et lisse, silhouette tridimensionnelle fidèle du continent africain avec Madagascar à droite, contour LED doré chaud continu (#FFD45A) créant un halo diffus, logo « OCD Live » au centre de la silhouette : monogramme OCD orange (#E36802) en relief et mot « Live » noir (#080808) en relief sous la partie droite, légère ombre portée, sol en grandes dalles de grès cérame beige clair poli (#D9D0C5) avec reflet doré modéré, éclairage doux et chaud, ambiance premium minimaliste, haute définition, format vertical 3:5.",
+    "negativePrompt": [
+      "carte de l'Afrique déformée", "Madagascar absent", "logo modifié", "texte OCP", "Live mal orthographié",
+      "couleurs du logo différentes", "contour LED interrompu", "éclairage bleu ou vert", "mur sombre",
+      "décor surchargé", "mobilier", "personnes", "perspective oblique", "style cartoon", "illustration plate",
+      "effet peinture", "basse résolution", "texte supplémentaire", "logo flottant", "reflets excessifs"
+    ],
+    "rule": "Le logo généré par IA n'est jamais utilisé tel quel : remplacer toujours le logo par le fichier officiel en post-production."
+  },
+
+  "doAndDont": {
+    "do": [
+      "Laisser respirer : beaucoup de blanc autour du héros.",
+      "Un seul point focal, une seule lumière chaude.",
+      "Composer frontalement, sur un axe.",
+      "Utiliser le logo officiel, avec sa zone de protection.",
+      "Garder les textes courts et en français simple."
+    ],
+    "dont": [
+      "Ajouter un dégradé coloré, un néon ou une lumière froide.",
+      "Mettre plusieurs halos ou plusieurs accents orange.",
+      "Utiliser l'or en texte ou en aplat.",
+      "Déformer la carte de l'Afrique ou le logo.",
+      "Surcharger : stickers, emojis, cadres, motifs de fond."
+    ]
+  },
+
+  "qualityChecklist": [
+    "Le point focal se voit en moins d'une seconde.",
+    "Au moins 40 % d'espace vide.",
+    "Trois couleurs principales maximum (blanc, orange, noir) + l'or en lumière.",
+    "Le logo est le fichier officiel, net, avec sa zone de protection.",
+    "Aucun texte orange de moins de 24 px.",
+    "Le halo ne touche pas le texte.",
+    "La silhouette de l'Afrique est fidèle et inclut Madagascar.",
+    "Lisible sur un écran de téléphone, à bout de bras."
+  ]
+}

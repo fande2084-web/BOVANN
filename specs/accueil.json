@@ -1,0 +1,1002 @@
+{
+  "meta": {
+    "project": "OCD Live — Site de réservation",
+    "page": "Accueil",
+    "version": "1.0",
+    "date": "2026-11-08",
+    "author": "KEN Digital Services",
+    "language": "fr",
+    "stack": {
+      "framework": "Next.js (App Router)",
+      "styling": "Tailwind CSS",
+      "motion": "Framer Motion",
+      "database": "Supabase",
+      "repo": "GitHub",
+      "hosting": "Netlify"
+    },
+    "principles": [
+      "Une seule décision au-dessus de la ligne de flottaison : présentiel ou distance.",
+      "Le contenu d'abord, l'interface s'efface : beaucoup de blanc, un seul accent orange par écran.",
+      "Mouvement au service de la compréhension : jamais décoratif, jamais bloquant.",
+      "Mobile d'abord : la majorité des visiteurs arrivent depuis Facebook, TikTok et WhatsApp.",
+      "Rapide en 3G : accueil interactif en moins de 3 secondes."
+    ],
+    "seo": {
+      "title": "OCD Live — Réserve ton live et vends en direct | Studio à Lomé",
+      "description": "Réserve ton live OCD Live : au studio de Lomé ou à distance depuis ta boutique, partout en Afrique. Place ton produit devant des milliers de clients.",
+      "ogImage": "/images/og-ocd-live.jpg",
+      "canonical": "https://ocd-live.netlify.app/",
+      "structuredData": "LocalBusiness (Lomé, Togo)"
+    }
+  },
+  "claudeCode": {
+    "usage": "Place ce fichier à la racine du projet sous specs/accueil.json, puis demande à Claude Code : « Implémente la page d'accueil en suivant specs/accueil.json, section par section ».",
+    "instructions": [
+      "Lire tout le fichier avant d'écrire du code ; ce JSON est la source de vérité.",
+      "Créer d'abord les tokens (tailwind.config.ts + app/globals.css en variables CSS) à partir de designTokens, puis les composants, puis les sections dans l'ordre de page.sections.",
+      "Ne rien inventer : textes, couleurs, tailles et animations viennent de ce fichier. Les valeurs entre <...> sont des espaces réservés à laisser tels quels.",
+      "Un composant par fichier, en TypeScript strict, sans dépendance hors stack.",
+      "Toutes les animations passent par lib/motion.ts (easing, durées, variants partagés) ; respecter prefers-reduced-motion via useReducedMotion.",
+      "Vérifier chaque section en 390 px (iPhone) puis en 1440 px avant de passer à la suivante.",
+      "Le composant components/hero/HeroDemo.tsx est fourni : l'intégrer tel quel dans la colonne droite du hero, sans le réécrire."
+    ],
+    "fileStructure": {
+      "app/layout.tsx": "polices (next/font), métadonnées SEO, lang=fr",
+      "app/page.tsx": "assemble les sections dans l'ordre",
+      "app/globals.css": "variables CSS des tokens",
+      "tailwind.config.ts": "couleurs, rayons, ombres, typographie",
+      "lib/motion.ts": "easings, durées, variants (fadeUp, stagger, maskReveal, spring)",
+      "components/ui/": "Button, ChoiceCard, LiveBadge, Logo",
+      "components/sections/": "Header, Hero, Steps, Statement, PackagesPreview, StudioFeature, RecruitBanner, ClosingCTA, Footer, MobileStickyBar",
+      "public/brand/": "logos SVG",
+      "public/images/": "studio-lome.jpg, og-ocd-live.jpg",
+      "components/hero/HeroDemo.tsx": "animation iPhone du hero (fourni, à copier tel quel)"
+    },
+    "commands": {
+      "install": "npm i framer-motion lucide-react @supabase/supabase-js",
+      "dev": "npm run dev",
+      "build": "npm run build"
+    },
+    "acceptanceCriteria": [
+      "Sur un iPhone (390×844), le titre et les 2 cartes de choix sont visibles sans défiler.",
+      "Clic sur une carte → /reserver?mode=presentiel ou /reserver?mode=distance.",
+      "Lighthouse mobile : Performance ≥ 90, Accessibilité ≥ 95.",
+      "Aucune animation avec prefers-reduced-motion activé, hors fondus de 150 ms.",
+      "Aucun texte orange #E36802 de moins de 24 px.",
+      "npm run build passe sans erreur ni avertissement TypeScript."
+    ]
+  },
+  "designTokens": {
+    "color": {
+      "orange": "#E36802",
+      "orangeDeep": "#A84B00",
+      "orangeSoft": "#FDEBDB",
+      "ink": "#000000",
+      "inkMuted": "#5C5752",
+      "surface": "#FFFFFF",
+      "surfaceAlt": "#F6F4F1",
+      "line": "#E6E2DD",
+      "night": "#0F0F0F",
+      "liveRed": "#C0261E",
+      "studioLight": "#FFD89A",
+      "rules": [
+        "Orange #E36802 jamais en texte courant sur blanc (3,4:1) : titres 24 px+, icônes, aplats.",
+        "Texte sur bouton orange = noir (6,3:1).",
+        "Rouge #C0261E réservé au badge EN DIRECT.",
+        "Proportions : 60 % blanc, 25 % noir, 15 % orange."
+      ]
+    },
+    "typography": {
+      "display": {
+        "family": "Archivo",
+        "weights": [
+          800,
+          900
+        ],
+        "source": "Google Fonts",
+        "tracking": "-0.02em"
+      },
+      "text": {
+        "family": "Inter",
+        "weights": [
+          400,
+          500,
+          600
+        ],
+        "source": "Google Fonts"
+      },
+      "scale": {
+        "display": {
+          "mobile": "40px/42px",
+          "desktop": "72px/72px",
+          "weight": 900
+        },
+        "h1": {
+          "mobile": "32px/36px",
+          "desktop": "48px/52px",
+          "weight": 800
+        },
+        "h2": {
+          "mobile": "26px/30px",
+          "desktop": "36px/40px",
+          "weight": 800
+        },
+        "h3": {
+          "mobile": "19px/24px",
+          "desktop": "22px/28px",
+          "weight": 700
+        },
+        "lead": {
+          "mobile": "17px/26px",
+          "desktop": "20px/30px",
+          "weight": 400
+        },
+        "body": "16px/24px",
+        "small": "14px/20px",
+        "label": {
+          "size": "12px/16px",
+          "weight": 700,
+          "transform": "uppercase",
+          "tracking": "0.08em"
+        }
+      }
+    },
+    "spacing": {
+      "base": 4,
+      "scale": [
+        4,
+        8,
+        12,
+        16,
+        24,
+        32,
+        48,
+        64,
+        96,
+        128
+      ]
+    },
+    "radius": {
+      "sm": "6px",
+      "md": "12px",
+      "lg": "20px",
+      "xl": "28px",
+      "pill": "9999px"
+    },
+    "elevation": {
+      "none": "none",
+      "card": "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)",
+      "cardHover": "0 2px 4px rgba(0,0,0,0.05), 0 20px 48px rgba(0,0,0,0.10)",
+      "header": "0 1px 0 #E6E2DD"
+    },
+    "layout": {
+      "maxWidth": "1200px",
+      "gutter": {
+        "mobile": "20px",
+        "tablet": "32px",
+        "desktop": "48px"
+      },
+      "grid": {
+        "mobile": 4,
+        "tablet": 8,
+        "desktop": 12
+      },
+      "breakpoints": {
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px"
+      },
+      "sectionSpacing": {
+        "mobile": "64px",
+        "desktop": "128px"
+      }
+    },
+    "motion": {
+      "easing": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)",
+        "decelerate": "cubic-bezier(0.05, 0.7, 0.1, 1)",
+        "accelerate": "cubic-bezier(0.3, 0, 0.8, 0.15)",
+        "spring": {
+          "type": "spring",
+          "stiffness": 380,
+          "damping": 32,
+          "mass": 1
+        },
+        "springSoft": {
+          "type": "spring",
+          "stiffness": 220,
+          "damping": 28,
+          "mass": 1
+        }
+      },
+      "duration": {
+        "instant": 100,
+        "fast": 180,
+        "base": 280,
+        "slow": 450,
+        "hero": 700
+      },
+      "distance": {
+        "reveal": "16px",
+        "heroReveal": "24px"
+      },
+      "stagger": {
+        "items": 60,
+        "words": 40
+      },
+      "rules": [
+        "N'animer que transform et opacity (60 ips, aucun reflow).",
+        "Une animation d'entrée par élément, une seule fois (viewport once, seuil 20 %).",
+        "Aucun élément ne bouge sans action ou sans entrer à l'écran, sauf le point EN DIRECT.",
+        "prefers-reduced-motion : toutes les animations deviennent un fondu de 150 ms, la pulsation du point s'arrête.",
+        "Le contenu est lisible et cliquable avant la fin de toute animation."
+      ]
+    }
+  },
+  "assets": {
+    "logo": {
+      "color": "/brand/ocd-live-logo.svg",
+      "negative": "/brand/ocd-live-logo-negative.svg",
+      "monogram": "/brand/ocd-monogram.svg",
+      "note": "Vectoriser le logo PNG fourni avant la mise en production."
+    },
+    "studioPhoto": {
+      "src": "/images/studio-lome.jpg",
+      "alt": "Le mur du studio OCD Live à Lomé : logo OCD Live au centre d'une carte de l'Afrique rétroéclairée",
+      "format": "AVIF + WebP, 3 tailles (640, 1200, 2000 px)",
+      "loading": "lazy (sauf si dans le premier écran)"
+    },
+    "icons": {
+      "library": "Lucide",
+      "stroke": 1.75,
+      "size": 20,
+      "color": "ink"
+    }
+  },
+  "page": {
+    "background": "surface",
+    "sections": [
+      {
+        "id": "header",
+        "type": "StickyHeader",
+        "height": {
+          "mobile": "60px",
+          "desktop": "72px"
+        },
+        "background": "rgba(255,255,255,0.72) + backdrop-filter: saturate(180%) blur(20px)",
+        "border": "header (visible uniquement après 8 px de défilement)",
+        "content": {
+          "left": {
+            "component": "Logo",
+            "variant": "color",
+            "height": {
+              "mobile": "28px",
+              "desktop": "32px"
+            },
+            "href": "/"
+          },
+          "center": {
+            "component": "Nav",
+            "visibleFrom": "md",
+            "items": [
+              {
+                "label": "Comment ça marche",
+                "href": "#comment"
+              },
+              {
+                "label": "Packages",
+                "href": "#packages"
+              },
+              {
+                "label": "Le studio",
+                "href": "#studio"
+              }
+            ]
+          },
+          "right": [
+            {
+              "component": "LinkWhatsApp",
+              "label": "Contact",
+              "icon": "message-circle",
+              "visibleFrom": "md",
+              "href": "https://wa.me/<NUMERO_BOVA>"
+            },
+            {
+              "component": "Button",
+              "variant": "primary",
+              "size": "sm",
+              "label": "Réserver",
+              "href": "#choix"
+            }
+          ],
+          "mobileMenu": {
+            "trigger": "icône 2 traits, 44×44 px",
+            "panel": "plein écran blanc, liens en h2, fermeture par glissement vers le bas"
+          }
+        },
+        "motion": {
+          "onScroll": "le fond passe de transparent à verre dépoli en 180 ms (standard)",
+          "onScrollDown": "l'en-tête reste visible (pas de masquage : la réservation doit toujours être à un clic)"
+        }
+      },
+      {
+        "id": "hero",
+        "type": "Hero",
+        "priority": "critique — doit tenir entièrement dans le premier écran sur mobile (390×844)",
+        "layout": {
+          "mobile": "une colonne : badge, titre, sous-titre, 2 cartes de choix, puis l'animation iPhone (les choix restent visibles en premier)",
+          "desktop": "2 colonnes : texte + 2 cartes de choix à gauche (fr), animation iPhone à droite (360 px)"
+        },
+        "padding": {
+          "mobile": "24px 20px 32px",
+          "desktop": "96px 48px 80px"
+        },
+        "content": {
+          "badge": {
+            "component": "LiveBadge",
+            "text": "Premiers lives dès le 1er décembre",
+            "dot": "liveRed, pulsation",
+            "style": "pilule, fond surfaceAlt, texte ink, label"
+          },
+          "title": {
+            "tag": "h1",
+            "style": "display",
+            "text": "Ton produit en direct.",
+            "secondLine": {
+              "text": "Devant des milliers de clients.",
+              "color": "inkMuted"
+            },
+            "align": "center"
+          },
+          "subtitle": {
+            "tag": "p",
+            "style": "lead",
+            "color": "inkMuted",
+            "maxWidth": "560px",
+            "text": "Réserve ton live OCD Live en 3 minutes. Tu présentes ton produit, ton numéro et ton adresse : on s'occupe de la diffusion."
+          },
+          "question": {
+            "id": "choix",
+            "style": "label",
+            "color": "inkMuted",
+            "text": "Comment veux-tu faire ton live ?"
+          },
+          "choices": [
+            {
+              "component": "ChoiceCard",
+              "id": "presentiel",
+              "eyebrow": "Au studio",
+              "title": "Live en présentiel",
+              "description": "Viens au studio de Lomé. Une régie dirige ton live, tu n'as qu'à vendre.",
+              "meta": "Lomé, Togo",
+              "icon": "map-pin",
+              "visual": "vignette de la photo du studio, coin supérieur droit, rayon md",
+              "cta": {
+                "label": "Choisir le studio",
+                "icon": "arrow-right"
+              },
+              "href": "/reserver?mode=presentiel"
+            },
+            {
+              "component": "ChoiceCard",
+              "id": "distance",
+              "eyebrow": "Depuis chez toi",
+              "title": "Live à distance",
+              "description": "Reste dans ta boutique, partout en Afrique ou dans le monde. Une animatrice t'accompagne en direct.",
+              "meta": "Cameroun, Tchad, Centrafrique, Gabon…",
+              "icon": "globe",
+              "visual": "contour de l'Afrique en trait fin orange, coin supérieur droit",
+              "cta": {
+                "label": "Choisir la distance",
+                "icon": "arrow-right"
+              },
+              "href": "/reserver?mode=distance"
+            }
+          ],
+          "reassurance": {
+            "style": "small",
+            "color": "inkMuted",
+            "align": "center",
+            "items": [
+              "À partir de 15 000 FCFA",
+              "Paiement Mobile Money",
+              "Confirmation sur WhatsApp"
+            ],
+            "separator": "·"
+          },
+          "demo": {
+            "component": "HeroDemo",
+            "file": "components/hero/HeroDemo.tsx",
+            "props": {
+              "studioSrc": "/images/studio-lome.jpg",
+              "logoSrc": "/brand/ocd-live-logo.svg"
+            },
+            "concept": "Un iPhone montre le parcours en 4 scènes qui tournent en boucle, avec une légende synchronisée et des barres de progression façon stories iOS.",
+            "sceneDuration": 4200,
+            "scenes": [
+              {
+                "n": "01",
+                "caption": "Choisis ton live",
+                "text": "Au studio de Lomé ou depuis ta boutique.",
+                "screen": "2 cartes de choix ; un tap sélectionne Présentiel (bordure orange + coche), l'autre s'estompe."
+              },
+              {
+                "n": "02",
+                "caption": "Réserve ton créneau",
+                "text": "Ton jour, ton heure, ton package.",
+                "screen": "calendrier de décembre 2026, tap sur le 1er, créneau 10:00 – 11:30 sélectionné, barre « Standard · 15 000 FCFA » qui monte, appui sur Réserver."
+              },
+              {
+                "n": "03",
+                "caption": "Reçois la confirmation",
+                "text": "Sur WhatsApp, en quelques secondes.",
+                "screen": "coche tracée dans un cercle, récapitulatif, notification iOS WhatsApp qui descend du haut."
+              },
+              {
+                "n": "04",
+                "caption": "Passe en direct",
+                "text": "Ton produit, ton numéro et ton adresse devant tous.",
+                "screen": "photo du studio en fond, badge EN DIRECT qui pulse, commentaires qui montent, cœurs, fiche produit épinglée (nom, prix, numéro, adresse)."
+              }
+            ],
+            "controls": "barres cliquables pour aller à une étape + bouton lecture/pause (WCAG 2.2.2)",
+            "behaviour": [
+              "la lecture s'arrête quand l'iPhone sort de l'écran (useInView)",
+              "prefers-reduced-motion : pas de lecture automatique, changements de scène en fondu de 150 ms, aucun tap ni cœur",
+              "transitions entre scènes : fondu + flou 6 px + échelle 1,03 → 1, 550 ms"
+            ]
+          }
+        },
+        "motion": {
+          "sequence": [
+            {
+              "target": "badge",
+              "from": {
+                "opacity": 0,
+                "y": 8
+              },
+              "to": {
+                "opacity": 1,
+                "y": 0
+              },
+              "delay": 0,
+              "duration": 450,
+              "easing": "decelerate"
+            },
+            {
+              "target": "title",
+              "type": "révélation ligne par ligne (masque)",
+              "from": {
+                "y": "100%"
+              },
+              "to": {
+                "y": "0%"
+              },
+              "delay": 80,
+              "stagger": 90,
+              "duration": 700,
+              "easing": "decelerate"
+            },
+            {
+              "target": "subtitle",
+              "from": {
+                "opacity": 0,
+                "y": 12
+              },
+              "to": {
+                "opacity": 1,
+                "y": 0
+              },
+              "delay": 260,
+              "duration": 450,
+              "easing": "decelerate"
+            },
+            {
+              "target": "choices",
+              "from": {
+                "opacity": 0,
+                "y": 24,
+                "scale": 0.98
+              },
+              "to": {
+                "opacity": 1,
+                "y": 0,
+                "scale": 1
+              },
+              "delay": 360,
+              "stagger": 80,
+              "spring": "springSoft"
+            },
+            {
+              "target": "reassurance",
+              "from": {
+                "opacity": 0
+              },
+              "to": {
+                "opacity": 1
+              },
+              "delay": 600,
+              "duration": 280
+            },
+            {
+              "target": "demo",
+              "from": {
+                "opacity": 0,
+                "y": 40,
+                "scale": 0.96
+              },
+              "to": {
+                "opacity": 1,
+                "y": 0,
+                "scale": 1
+              },
+              "delay": 350,
+              "spring": "springSoft"
+            }
+          ],
+          "totalDuration": "≈ 1 s ; cartes cliquables dès 0 ms"
+        }
+      },
+      {
+        "id": "comment",
+        "type": "Steps",
+        "title": {
+          "tag": "h2",
+          "text": "Trois étapes. C'est tout."
+        },
+        "layout": {
+          "mobile": "liste verticale, ligne fine orange qui relie les numéros",
+          "desktop": "3 colonnes égales"
+        },
+        "items": [
+          {
+            "number": "01",
+            "title": "Choisis ton live",
+            "text": "Au studio ou à distance, puis le package qui te convient."
+          },
+          {
+            "number": "02",
+            "title": "Réserve ton créneau",
+            "text": "Choisis ton jour et ton heure. Tu reçois la confirmation sur WhatsApp."
+          },
+          {
+            "number": "03",
+            "title": "Passe en direct",
+            "text": "Présente ton produit, ton numéro et ton adresse à des milliers de clients."
+          }
+        ],
+        "numberStyle": "Archivo 900, 48 px, orange",
+        "motion": {
+          "reveal": {
+            "from": {
+              "opacity": 0,
+              "y": 16
+            },
+            "to": {
+              "opacity": 1,
+              "y": 0
+            },
+            "stagger": 60,
+            "duration": 450,
+            "easing": "decelerate"
+          },
+          "connector": "la ligne orange se dessine de 0 à 100 % au défilement (scroll-linked, scaleX/scaleY)"
+        }
+      },
+      {
+        "id": "valeur",
+        "type": "Statement",
+        "background": "night",
+        "padding": {
+          "mobile": "80px 20px",
+          "desktop": "128px 48px"
+        },
+        "content": {
+          "eyebrow": {
+            "text": "Le marketing avant la vente",
+            "style": "label",
+            "color": "orange"
+          },
+          "quote": {
+            "tag": "p",
+            "style": "h1",
+            "color": "#FFFFFF",
+            "text": "Tu ne viens pas seulement vendre. Tu viens te faire connaître.",
+            "highlight": {
+              "words": "te faire connaître",
+              "color": "orange"
+            }
+          },
+          "text": {
+            "style": "lead",
+            "color": "#BDB7B0",
+            "text": "Ton produit, ton numéro et ton adresse restent dans la tête de ceux qui auront besoin de toi demain."
+          },
+          "decor": "3 barres obliques orange (motif de l'entaille du logo), alignées à droite, opacités 100 / 55 / 25 %"
+        },
+        "motion": {
+          "quote": "mots révélés de gris (#5C5752) à blanc au fil du défilement (scroll-linked, opacité uniquement)",
+          "decor": "les barres glissent de 24 px vers la gauche en parallaxe légère (0,15× la vitesse de défilement)"
+        }
+      },
+      {
+        "id": "packages",
+        "type": "PackagesPreview",
+        "title": {
+          "tag": "h2",
+          "text": "Plus tu restes, moins l'heure te coûte."
+        },
+        "subtitle": {
+          "style": "lead",
+          "color": "inkMuted",
+          "text": "6 packages, du live unique au mois complet."
+        },
+        "layout": {
+          "mobile": "carrousel horizontal à défilement aimanté (scroll-snap), carte à 85 % de largeur",
+          "desktop": "3 cartes visibles"
+        },
+        "items": [
+          {
+            "name": "Standard",
+            "detail": "1 live de 1 h 30",
+            "price": "15 000",
+            "currency": "FCFA",
+            "highlight": true,
+            "badge": "Le plus choisi",
+            "style": "fond night, prix orange"
+          },
+          {
+            "name": "Long",
+            "detail": "1 live de 4 h",
+            "price": "35 000",
+            "currency": "FCFA",
+            "note": "8 750 FCFA / heure"
+          },
+          {
+            "name": "Annonce BOVA",
+            "detail": "1 h 30 + vidéo d'annonce publiée par BOVA",
+            "price": "25 000",
+            "currency": "FCFA",
+            "note": "Visibilité maximale"
+          }
+        ],
+        "cta": {
+          "component": "Button",
+          "variant": "secondary",
+          "label": "Voir les 6 packages",
+          "href": "/packages"
+        },
+        "dataSource": "Supabase, table packages (prix modifiables dans l'admin)",
+        "motion": {
+          "reveal": {
+            "stagger": 60,
+            "from": {
+              "opacity": 0,
+              "y": 16
+            },
+            "duration": 450
+          },
+          "priceChange": "si le prix est mis à jour, les chiffres défilent verticalement (180 ms par chiffre)"
+        }
+      },
+      {
+        "id": "studio",
+        "type": "MediaFeature",
+        "layout": {
+          "mobile": "photo pleine largeur puis texte",
+          "desktop": "photo 7 colonnes à gauche, texte 5 colonnes à droite"
+        },
+        "media": {
+          "asset": "studioPhoto",
+          "radius": "xl",
+          "aspect": {
+            "mobile": "4/5",
+            "desktop": "3/4"
+          },
+          "objectPosition": "50% 20%"
+        },
+        "content": {
+          "eyebrow": {
+            "text": "Le studio",
+            "style": "label",
+            "color": "orangeDeep"
+          },
+          "title": {
+            "tag": "h2",
+            "text": "Un vrai studio, à Lomé."
+          },
+          "text": "Une régie dirige ton live du début à la fin. Tu t'assois, tu présentes, tu vends.",
+          "list": [
+            "Diffusion sur le compte House of Challenge",
+            "Régie et accompagnement inclus",
+            "Adresse et horaires envoyés sur WhatsApp"
+          ],
+          "cta": {
+            "component": "Button",
+            "variant": "primary",
+            "label": "Réserver au studio",
+            "href": "/reserver?mode=presentiel"
+          }
+        },
+        "motion": {
+          "media": "révélation par masque du bas vers le haut (clip-path inset 100 % → 0), 700 ms, decelerate ; puis zoom très lent 1,06 → 1 lié au défilement",
+          "content": {
+            "stagger": 60,
+            "from": {
+              "opacity": 0,
+              "y": 16
+            }
+          }
+        }
+      },
+      {
+        "id": "recrutement",
+        "type": "Banner",
+        "background": "orangeSoft",
+        "radius": "lg",
+        "content": {
+          "title": {
+            "tag": "h3",
+            "text": "On recrute une animatrice à Lomé."
+          },
+          "text": "Tu sais parler et tu sais vendre ? Pas besoin de diplôme. Rejoins l'équipe à temps plein.",
+          "cta": {
+            "component": "Button",
+            "variant": "ghost",
+            "label": "Postuler",
+            "icon": "arrow-right",
+            "href": "/recrutement"
+          }
+        },
+        "motion": {
+          "reveal": {
+            "from": {
+              "opacity": 0,
+              "y": 16
+            },
+            "duration": 450
+          }
+        }
+      },
+      {
+        "id": "finalCta",
+        "type": "ClosingCTA",
+        "align": "center",
+        "content": {
+          "title": {
+            "tag": "h2",
+            "style": "display",
+            "text": "Prêt à passer en direct ?"
+          },
+          "actions": [
+            {
+              "component": "Button",
+              "variant": "primary",
+              "size": "lg",
+              "label": "Réserver mon live",
+              "href": "#choix"
+            },
+            {
+              "component": "Button",
+              "variant": "secondary",
+              "size": "lg",
+              "label": "Écrire sur WhatsApp",
+              "icon": "message-circle",
+              "href": "https://wa.me/<NUMERO_BOVA>"
+            }
+          ]
+        },
+        "motion": {
+          "reveal": {
+            "from": {
+              "opacity": 0,
+              "scale": 0.98
+            },
+            "spring": "springSoft"
+          }
+        }
+      },
+      {
+        "id": "footer",
+        "type": "Footer",
+        "background": "night",
+        "content": {
+          "logo": {
+            "variant": "negative",
+            "height": "32px"
+          },
+          "tagline": "Studio de live commerce · Lomé, Togo",
+          "links": [
+            {
+              "label": "Comment ça marche",
+              "href": "#comment"
+            },
+            {
+              "label": "Packages",
+              "href": "/packages"
+            },
+            {
+              "label": "Conditions",
+              "href": "/conditions"
+            },
+            {
+              "label": "Recrutement",
+              "href": "/recrutement"
+            },
+            {
+              "label": "Contact WhatsApp",
+              "href": "https://wa.me/<NUMERO_BOVA>"
+            }
+          ],
+          "legal": "© 2026 OCD Live. Tous droits réservés."
+        }
+      }
+    ],
+    "mobileStickyBar": {
+      "visibleFrom": "après le hero, sur mobile uniquement",
+      "content": {
+        "component": "Button",
+        "variant": "primary",
+        "fullWidth": true,
+        "label": "Réserver mon live",
+        "href": "#choix"
+      },
+      "style": "barre fixe en bas, fond blanc verre dépoli, marge de sécurité iOS (env(safe-area-inset-bottom))",
+      "motion": "entre par glissement de 100 % à 0 (spring), sort quand le CTA final est visible"
+    }
+  },
+  "components": {
+    "Button": {
+      "height": {
+        "sm": "36px",
+        "md": "48px",
+        "lg": "56px"
+      },
+      "radius": "md",
+      "font": "Inter 600, 16px",
+      "minTouchTarget": "44×44 px",
+      "variants": {
+        "primary": {
+          "background": "orange",
+          "text": "ink",
+          "hover": "fond #F07410",
+          "pressed": "fond orangeDeep, texte blanc"
+        },
+        "secondary": {
+          "background": "transparent",
+          "border": "1.5px ink",
+          "text": "ink",
+          "hover": "fond surfaceAlt"
+        },
+        "ghost": {
+          "background": "transparent",
+          "text": "ink",
+          "hover": "soulignement 1px qui se dessine de gauche à droite"
+        },
+        "dark": {
+          "background": "ink",
+          "text": "#FFFFFF"
+        }
+      },
+      "motion": {
+        "hover": "translateY(-1px), 180 ms, standard",
+        "press": "scale 0.97, spring",
+        "icon": "la flèche glisse de 4 px vers la droite au survol"
+      },
+      "focus": "anneau 2px orangeDeep, décalé de 2px"
+    },
+    "ChoiceCard": {
+      "size": {
+        "mobile": "pleine largeur, min 148 px de haut",
+        "desktop": "min 280 px de haut"
+      },
+      "padding": {
+        "mobile": "20px",
+        "desktop": "32px"
+      },
+      "radius": "xl",
+      "background": "surface",
+      "border": "1px line",
+      "shadow": "card",
+      "structure": [
+        "eyebrow (label, inkMuted)",
+        "title (h2)",
+        "description (body, inkMuted)",
+        "meta (small, icône)",
+        "cta (lien avec flèche, en bas)"
+      ],
+      "states": {
+        "hover": {
+          "shadow": "cardHover",
+          "border": "orange",
+          "transform": "translateY(-4px)",
+          "visual": "la vignette s'agrandit de 1 → 1,04"
+        },
+        "pressed": {
+          "transform": "scale(0.98)",
+          "spring": "spring"
+        },
+        "focus": "anneau 2px orangeDeep",
+        "selected": "bordure orange 2px + coche orange en haut à droite (avant la navigation)"
+      },
+      "motion": {
+        "hover": "spring, aucun délai",
+        "onSelect": "la carte choisie grandit légèrement (scale 1.02) pendant que l'autre s'estompe (opacité 0.4), puis transition de page partagée (shared element) vers l'étape Package, 450 ms"
+      },
+      "accessibility": "élément <a> unique couvrant toute la carte, libellé complet lu par les lecteurs d'écran"
+    },
+    "LiveBadge": {
+      "dot": {
+        "size": "8px",
+        "color": "liveRed"
+      },
+      "motion": {
+        "pulse": "halo rouge qui grandit de scale 1 → 2,2 et s'efface (opacité 0,5 → 0) toutes les 2 s, ease-out"
+      }
+    },
+    "Logo": {
+      "clearSpace": "épaisseur du trait du O sur les 4 côtés",
+      "minWidth": "120px"
+    }
+  },
+  "accessibility": {
+    "standard": "WCAG 2.2 AA",
+    "contrast": "texte 4,5:1 minimum ; texte orange uniquement en orangeDeep ou en 24 px+",
+    "keyboard": "tout est accessible au clavier, ordre de tabulation logique, lien « Aller au contenu »",
+    "focus": "anneau visible sur tous les éléments interactifs",
+    "touch": "cibles tactiles de 44×44 px minimum",
+    "motion": "respect de prefers-reduced-motion",
+    "images": "texte alternatif descriptif sur toutes les images",
+    "language": "lang=\"fr\" sur la page"
+  },
+  "performance": {
+    "budgets": {
+      "LCP": "< 2,5 s en 4G, < 3 s en 3G",
+      "CLS": "< 0,05",
+      "INP": "< 200 ms",
+      "jsInitial": "< 120 Ko compressés"
+    },
+    "techniques": [
+      "Polices auto-hébergées via next/font, sous-ensemble latin, font-display: swap",
+      "Images AVIF/WebP avec next/image et tailles responsives",
+      "Framer Motion chargé avec LazyMotion (domAnimation)",
+      "Sections sous la ligne de flottaison chargées à l'approche (lazy)",
+      "Aucune vidéo en lecture automatique"
+    ]
+  },
+  "analytics": {
+    "events": [
+      {
+        "name": "choice_selected",
+        "properties": [
+          "mode: presentiel | distance"
+        ]
+      },
+      {
+        "name": "cta_click",
+        "properties": [
+          "location",
+          "label"
+        ]
+      },
+      {
+        "name": "whatsapp_click",
+        "properties": [
+          "location"
+        ]
+      },
+      {
+        "name": "packages_view_all"
+      }
+    ],
+    "pixels": [
+      "Meta Pixel",
+      "TikTok Pixel"
+    ]
+  },
+  "placeholders": {
+    "<NUMERO_BOVA>": "Numéro WhatsApp de BOVA, à fournir par le client",
+    "canonical": "Remplacer l'adresse Netlify par le nom de domaine après validation"
+  }
+}

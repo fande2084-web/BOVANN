@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokens : specs/accueil.json → designTokens */
+:root {
+  --orange: #e36802;
+  --orange-deep: #a84b00;
+  --orange-soft: #fdebdb;
+  --orange-hover: #f07410;
+  --ink: #000000;
+  --ink-muted: #5c5752;
+  --surface: #ffffff;
+  --surface-alt: #f6f4f1;
+  --line: #e6e2dd;
+  --night: #0f0f0f;
+  --night-text: #bdb7b0;
+  --night-dim: #5c5752;
+  --live-red: #c0261e;
+  --studio-light: #ffd89a;
+
+  /* specs/directives-design.json → palette.studio (l'or ne sert qu'en lumière) */
+  --wall: #e9e8e9;
+  --led-gold: #ffd45a;
+  --warm-glow: #ffe5a1;
+  --floor: #d9d0c5;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.05), 0 20px 48px rgba(0, 0, 0, 0.1);
+  --shadow-header: 0 1px 0 #e6e2dd;
+  /* Carte au survol : liseré orange (bordure) + halo chaud très léger */
+  --shadow-card-glow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 18px 44px rgba(0, 0, 0, 0.08), 0 0 40px rgba(255, 229, 161, 0.55);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  --gutter: 20px;
+  --header-h: 60px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+    --header-h: 72px;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 48px;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 16px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    @apply bg-surface font-sans text-body text-ink antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--orange-deep);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-page;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+  .text-label-style {
+    @apply text-label uppercase;
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Point EN DIRECT : halo 1 → 2,2, opacité 0,5 → 0, toutes les 2 s */
+@keyframes live-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+.live-halo {
+  animation: live-pulse 2s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-halo {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Lumière du studio — specs/directives-design.json → lighting.effects */
+/* ------------------------------------------------------------------ */
+
+/* Halo diffus derrière le héros (un seul par écran, jamais sur le texte) */
+.studio-halo {
+  background: radial-gradient(closest-side, rgba(255, 229, 161, 0.55), rgba(227, 104, 2, 0.08) 60%, transparent 80%);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+/* Respiration du halo : opacité 0,85 ↔ 1, 4 s */
+@keyframes halo-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+.halo-breathe {
+  animation: halo-breathe 4s ease-in-out infinite;
+}
+
+/* Contour LED doré */
+.led-contour {
+  stroke: var(--led-gold);
+  stroke-width: 1.5px;
+  filter: drop-shadow(0 0 4px var(--led-gold)) drop-shadow(0 0 14px rgba(255, 212, 90, 0.6));
+}
+
+/* Relief : élément posé sur le mur */
+.wall-relief {
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.12)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halo-breathe {
+    animation: none;
+  }
+}
