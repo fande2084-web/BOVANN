@@ -5,7 +5,11 @@
 export const WHATSAPP_NUMBER = "<NUMERO_BOVA>";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-export const SITE_URL = "https://ocd-live.netlify.app";
+/**
+ * Adresse publique (canonical, Open Graph, JSON-LD). Hébergement : Vercel.
+ * Pour un nom de domaine : définir NEXT_PUBLIC_SITE_URL dans Vercel (ex. https://ocdlive.com).
+ */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://bovann-pied.vercel.app").replace(/\/$/, "");
 
 export const SEO = {
   title: "OCD Live — Réserve ton live et vends en direct | Studio à Lomé",
