@@ -1,8 +1,8 @@
 /**
  * Constantes du site : specs/accueil.json → meta, placeholders.
- * <NUMERO_BOVA> reste tel quel tant que le client ne l'a pas fourni.
+ * Numéro WhatsApp de BOVA (+49 176 58443070), au format international sans « + » ni espaces pour wa.me.
  */
-export const WHATSAPP_NUMBER = "<NUMERO_BOVA>";
+export const WHATSAPP_NUMBER = "4917658443070";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 /**

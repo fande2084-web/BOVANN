@@ -300,7 +300,7 @@
               "label": "Contact",
               "icon": "message-circle",
               "visibleFrom": "md",
-              "href": "https://wa.me/<NUMERO_BOVA>"
+              "href": "https://wa.me/4917658443070"
             },
             {
               "component": "Button",
@@ -783,7 +783,7 @@
               "size": "lg",
               "label": "Écrire sur WhatsApp",
               "icon": "message-circle",
-              "href": "https://wa.me/<NUMERO_BOVA>"
+              "href": "https://wa.me/4917658443070"
             }
           ]
         },
@@ -826,7 +826,7 @@
             },
             {
               "label": "Contact WhatsApp",
-              "href": "https://wa.me/<NUMERO_BOVA>"
+              "href": "https://wa.me/4917658443070"
             }
           ],
           "legal": "© 2026 OCD Live. Tous droits réservés."
@@ -996,7 +996,7 @@
     ]
   },
   "placeholders": {
-    "<NUMERO_BOVA>": "Numéro WhatsApp de BOVA, à fournir par le client",
+    "<NUMERO_BOVA>": "Fourni : +49 176 58443070 (wa.me/4917658443070)",
     "canonical": "Remplacer l'adresse Netlify par le nom de domaine après validation"
   }
 }
