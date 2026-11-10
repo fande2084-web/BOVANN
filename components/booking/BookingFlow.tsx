@@ -3,11 +3,13 @@
 import { AnimatePresence, m } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BookingPackage, SlotsConfig } from "@/lib/booking/catalog";
 import {
   EMPTY_DRAFT,
   TOTAL_STEPS,
+  clearDraft,
   isMode,
   isStepValid,
   loadDraft,
@@ -18,7 +20,7 @@ import {
 } from "@/lib/booking/draft";
 import { duration, easing, useReduced } from "@/lib/motion";
 import { Logo } from "@/components/ui/Logo";
-import { StepRecap } from "./StepRecap";
+import { StepPayment } from "./StepPayment";
 import { StepSlots } from "./StepSlots";
 import { ModeChoice, StepCategory, StepIdentity, StepPackage } from "./steps";
 import { ActionButton } from "./ui";
@@ -38,6 +40,9 @@ export function BookingFlow({
   initialMode: Mode | null;
 }) {
   const reduced = useReduced();
+  const router = useRouter();
+  // Paiement en cours : on bloque « Retour »
+  const [busy, setBusy] = useState(false);
   const [draft, setDraft] = useState<BookingDraft>({ ...EMPTY_DRAFT, mode: initialMode });
   const [hydrated, setHydrated] = useState(false);
   const headingRef = useRef<string>("booking-step-title");
@@ -163,7 +168,21 @@ export function BookingFlow({
               {draft.mode && step === 4 && pkg && (
                 <StepSlots draft={draft} update={update} headingId={headingRef.current} pkg={pkg} config={config} />
               )}
-              {draft.mode && step === 5 && pkg && <StepRecap draft={draft} pkg={pkg} config={config} headingId={headingRef.current} />}
+              {draft.mode && step === 5 && pkg && (
+                <StepPayment
+                  draft={draft}
+                  update={update}
+                  pkg={pkg}
+                  config={config}
+                  headingId={headingRef.current}
+                  onBusyChange={setBusy}
+                  onBackToSlots={() => update({ step: 4 })}
+                  onPaid={(reference) => {
+                    clearDraft();
+                    router.push(`/reserver/confirmation/${reference}`);
+                  }}
+                />
+              )}
             </m.div>
           </AnimatePresence>
         )}
@@ -177,7 +196,7 @@ export function BookingFlow({
         >
           <div className="mx-auto flex max-w-3xl items-center gap-3 px-5 py-3 md:px-8">
             {draft.mode ? (
-              <ActionButton variant="secondary" onClick={goBack} className="px-4">
+              <ActionButton variant="secondary" onClick={goBack} disabled={busy} className="px-4">
                 <ArrowLeft aria-hidden size={20} strokeWidth={1.75} />
                 Retour
               </ActionButton>

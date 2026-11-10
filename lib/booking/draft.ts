@@ -21,6 +21,13 @@ export type BookingDraft = {
   packageCode: string;
   /** Instants ISO (UTC = heure de Lomé) */
   slots: string[];
+  /** Étape 5 : moyen et numéro de paiement */
+  paymentMethod: string;
+  payerCountry: string;
+  payerNational: string;
+  /** Réservation déjà créée (créneaux bloqués 15 min) et empreinte des choix qui l'ont créée */
+  pendingRef: string;
+  pendingKey: string;
 };
 
 export const EMPTY_DRAFT: BookingDraft = {
@@ -36,6 +43,11 @@ export const EMPTY_DRAFT: BookingDraft = {
   address: "",
   packageCode: "",
   slots: [],
+  paymentMethod: "",
+  payerCountry: "",
+  payerNational: "",
+  pendingRef: "",
+  pendingKey: "",
 };
 
 export const TOTAL_STEPS = 5;
@@ -104,6 +116,19 @@ export function loadDraft(): Partial<BookingDraft> | null {
     return raw ? (JSON.parse(raw) as Partial<BookingDraft>) : null;
   } catch {
     return null;
+  }
+}
+
+/** Empreinte des choix qui définissent la réservation : si elle change, il faut en créer une nouvelle */
+export function bookingKey(d: BookingDraft): string {
+  return JSON.stringify([d.mode, d.packageCode, [...d.slots].sort(), d.fullName.trim(), d.businessName.trim(), d.phoneCountry, d.phoneNational, d.country, d.category, d.categoryDetail.trim(), d.address.trim()]);
+}
+
+export function clearDraft(): void {
+  try {
+    window.sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* rien */
   }
 }
 

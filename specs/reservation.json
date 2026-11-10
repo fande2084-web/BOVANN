@@ -6,14 +6,22 @@
     "date": "2026-11-10",
     "source": "Fonctionnement observé dans la vidéo de démonstration du site ocd-live.briandave.dev, complété par le cahier des charges KEN Digital Services",
     "usage": "Placer sous specs/reservation.json puis dire à Claude Code : « Lis specs/reservation.json et implémente-le phase par phase (section workOrder), en me montrant le résultat après chaque phase. »",
-    "stack": { "framework": "Next.js App Router", "language": "TypeScript strict", "database": "Supabase (Postgres, Auth, Storage)", "hosting": "Netlify", "pdf": "@react-pdf/renderer", "email": "Resend", "payments": "FedaPay ou CinetPay" },
+    "stack": {
+      "framework": "Next.js App Router",
+      "language": "TypeScript strict",
+      "database": "Supabase (Postgres, Auth, Storage)",
+      "hosting": "Netlify",
+      "pdf": "@react-pdf/renderer",
+      "email": "Resend",
+      "payments": "FedaPay ou CinetPay"
+    },
     "decisions": [
       "2026-11-10 : le site est hébergé sur Vercel (et non Netlify) : variables d'environnement dans Vercel ; tâches planifiées via Supabase cron ou Vercel Cron.",
       "2026-11-10 : le catalogue de la réservation (Essai, Duo, Pack 4, Annonce, Le Mois) remplace celui de l'accueil ; l'accueil lit la même table (colonnes show_on_home, position, detail, price générées pour compatibilité).",
-      "2026-11-10 : numéro WhatsApp de BOVA fourni : +49 176 58443070."
+      "2026-11-10 : numéro WhatsApp de BOVA fourni : +49 176 58443070.",
+      "2026-11-10 : paiements Orange Money, MTN, Moov et carte bancaire en SIMULATION uniquement, sans agrégateur (Wave retiré, Moov ajouté). Phase 8 (live) en attente."
     ]
   },
-
   "rules": [
     "NE PAS modifier la page d'accueil (app/page.tsx et ses sections) ni ses composants.",
     "NE PAS modifier la charte graphique : réutiliser les tokens existants (tailwind.config.ts, app/globals.css, lib/motion.ts) et les composants UI existants (Button, Logo…). Aucune nouvelle couleur, police ou rayon.",
@@ -21,7 +29,6 @@
     "Mobile d'abord (390 px), en français, tutoiement, phrases courtes.",
     "Aucune clé ou numéro sensible dans le code : tout en variables d'environnement Netlify."
   ],
-
   "booking": {
     "route": "/reserver",
     "layout": {
@@ -36,8 +43,27 @@
         "title": "Tu vends quoi ?",
         "subtitle": "C'est ce qui permet de préparer ton passage correctement.",
         "fields": [
-          { "name": "category", "type": "radio-cards", "required": true, "options": ["Nourriture, restauration", "Vêtements, mode, chaussures", "Cosmétiques, beauté, soins", "Matériel, électronique, maison", "Un service, une prestation", "Autre chose"] },
-          { "name": "category_detail", "type": "text", "required": false, "label": "Précise ce que tu vends", "placeholder": "Par exemple : téléphones reconditionnés, chargeurs et housses", "showWhen": "une catégorie est choisie" }
+          {
+            "name": "category",
+            "type": "radio-cards",
+            "required": true,
+            "options": [
+              "Nourriture, restauration",
+              "Vêtements, mode, chaussures",
+              "Cosmétiques, beauté, soins",
+              "Matériel, électronique, maison",
+              "Un service, une prestation",
+              "Autre chose"
+            ]
+          },
+          {
+            "name": "category_detail",
+            "type": "text",
+            "required": false,
+            "label": "Précise ce que tu vends",
+            "placeholder": "Par exemple : téléphones reconditionnés, chargeurs et housses",
+            "showWhen": "une catégorie est choisie"
+          }
         ]
       },
       {
@@ -45,11 +71,63 @@
         "title": "Qui vient à l'antenne ?",
         "subtitle": "C'est ce que l'organisateur reçoit avec ta réservation.",
         "fields": [
-          { "name": "full_name", "type": "text", "required": true, "label": "Ton nom", "autocomplete": "name" },
-          { "name": "business_name", "type": "text", "required": true, "label": "Le nom de ton business", "placeholder": "Par exemple : Chez Afi, cuisine togolaise" },
-          { "name": "whatsapp", "type": "phone", "required": true, "label": "Ton WhatsApp", "autocomplete": "tel", "countryPicker": { "default": "TG", "search": true, "flags": true, "countries": ["TG +228", "BJ +229", "BF +226", "CM +237", "CF +236", "CI +225", "CG +242", "CD +243", "GA +241", "TD +235", "SN +221", "ML +223", "NE +227", "GN +224"] }, "validation": "format E.164, clavier numérique" },
-          { "name": "country", "type": "select-search", "required": "obligatoire en mode distance", "label": "Tu es dans quel pays ?", "placeholder": "Choisis ton pays" },
-          { "name": "address", "type": "text", "required": false, "label": "Ton adresse ou lieu de vente", "help": "Affichée pendant le live" }
+          {
+            "name": "full_name",
+            "type": "text",
+            "required": true,
+            "label": "Ton nom",
+            "autocomplete": "name"
+          },
+          {
+            "name": "business_name",
+            "type": "text",
+            "required": true,
+            "label": "Le nom de ton business",
+            "placeholder": "Par exemple : Chez Afi, cuisine togolaise"
+          },
+          {
+            "name": "whatsapp",
+            "type": "phone",
+            "required": true,
+            "label": "Ton WhatsApp",
+            "autocomplete": "tel",
+            "countryPicker": {
+              "default": "TG",
+              "search": true,
+              "flags": true,
+              "countries": [
+                "TG +228",
+                "BJ +229",
+                "BF +226",
+                "CM +237",
+                "CF +236",
+                "CI +225",
+                "CG +242",
+                "CD +243",
+                "GA +241",
+                "TD +235",
+                "SN +221",
+                "ML +223",
+                "NE +227",
+                "GN +224"
+              ]
+            },
+            "validation": "format E.164, clavier numérique"
+          },
+          {
+            "name": "country",
+            "type": "select-search",
+            "required": "obligatoire en mode distance",
+            "label": "Tu es dans quel pays ?",
+            "placeholder": "Choisis ton pays"
+          },
+          {
+            "name": "address",
+            "type": "text",
+            "required": false,
+            "label": "Ton adresse ou lieu de vente",
+            "help": "Affichée pendant le live"
+          }
         ]
       },
       {
@@ -60,11 +138,56 @@
         "card": "Nom, contenu, prix ; pour les packs, prix par direct (« 14 000 FCFA le direct, 2 000 FCFA de moins qu'à l'unité »)",
         "rule": "Le nombre de directs du package fixe le nombre de créneaux à choisir à l'étape 4",
         "seed": [
-          { "code": "essai", "name": "Essai", "content": "1 direct de 1 h 30", "sessions": 1, "price_fcfa": 15000, "perks": ["1 h 30 de direct sur House of Challenge"] },
-          { "code": "duo", "name": "Duo", "content": "2 directs de 1 h 30", "sessions": 2, "price_fcfa": 28000, "perks": ["2 directs aux dates que tu choisis", "Le deuxième direct annoncé pendant le premier", "Ton numéro et ton adresse annoncés à l'antenne"] },
-          { "code": "pack4", "name": "Pack 4", "content": "4 directs de 1 h 30", "sessions": 4, "price_fcfa": 52000, "perks": [] },
-          { "code": "annonce", "name": "Annonce", "content": "1 direct de 1 h 30 avec annonce", "sessions": 1, "price_fcfa": 45000, "perks": ["Bovann publie ta vidéo sur son compte", "Ton direct annoncé avant le passage", "1 h 30 de direct sur House of Challenge"] },
-          { "code": "mois", "name": "Le Mois", "content": "8 directs de 1 h 30", "sessions": 8, "price_fcfa": 95000, "perks": [] }
+          {
+            "code": "essai",
+            "name": "Essai",
+            "content": "1 direct de 1 h 30",
+            "sessions": 1,
+            "price_fcfa": 15000,
+            "perks": [
+              "1 h 30 de direct sur House of Challenge"
+            ]
+          },
+          {
+            "code": "duo",
+            "name": "Duo",
+            "content": "2 directs de 1 h 30",
+            "sessions": 2,
+            "price_fcfa": 28000,
+            "perks": [
+              "2 directs aux dates que tu choisis",
+              "Le deuxième direct annoncé pendant le premier",
+              "Ton numéro et ton adresse annoncés à l'antenne"
+            ]
+          },
+          {
+            "code": "pack4",
+            "name": "Pack 4",
+            "content": "4 directs de 1 h 30",
+            "sessions": 4,
+            "price_fcfa": 52000,
+            "perks": []
+          },
+          {
+            "code": "annonce",
+            "name": "Annonce",
+            "content": "1 direct de 1 h 30 avec annonce",
+            "sessions": 1,
+            "price_fcfa": 45000,
+            "perks": [
+              "Bovann publie ta vidéo sur son compte",
+              "Ton direct annoncé avant le passage",
+              "1 h 30 de direct sur House of Challenge"
+            ]
+          },
+          {
+            "code": "mois",
+            "name": "Le Mois",
+            "content": "8 directs de 1 h 30",
+            "sessions": 8,
+            "price_fcfa": 95000,
+            "perks": []
+          }
         ]
       },
       {
@@ -75,10 +198,25 @@
           "weekStart": "lundi",
           "header": "décembre 2026 + étiquette « Premier mois d'antenne »",
           "navigation": "mois suivants accessibles",
-          "disabled": ["jours passés", "jours fermés", "jours complets"],
+          "disabled": [
+            "jours passés",
+            "jours fermés",
+            "jours complets"
+          ],
           "dayHeader": "« jeu. 3 » + nombre de créneaux libres (« 5 créneaux »)"
         },
-        "slots": { "defaultStartTimes": ["10:00", "12:00", "14:00", "16:00", "18:00"], "durationMin": 90, "editableInAdmin": true, "label": "10:00 à 11:30" },
+        "slots": {
+          "defaultStartTimes": [
+            "10:00",
+            "12:00",
+            "14:00",
+            "16:00",
+            "18:00"
+          ],
+          "durationMin": 90,
+          "editableInAdmin": true,
+          "label": "10:00 à 11:30"
+        },
         "timezone": {
           "reference": "Africa/Lome (GMT)",
           "banner": "Les heures ci-contre sont celles de Lomé. Chez toi il est 1 h plus tard, et ton heure locale est rappelée sous chaque créneau.",
@@ -98,12 +236,32 @@
         "title": "Paiement",
         "summary": "« jeudi 3 décembre, de 12:00 à 13:30 — heure de Lomé », package, et « TOTAL 15 000 FCFA » en grand",
         "methods": [
-          { "id": "orange_money", "label": "Orange Money", "countries": "Togo, Côte d'Ivoire, Cameroun" },
-          { "id": "mtn", "label": "MTN Mobile Money", "countries": "Cameroun, Bénin, Ouganda" },
-          { "id": "wave", "label": "Wave", "countries": "Sénégal, Côte d'Ivoire, Mali" },
-          { "id": "card", "label": "Visa ou Mastercard", "countries": "Depuis partout dans le monde" }
+          {
+            "id": "orange_money",
+            "label": "Orange Money",
+            "countries": "Côte d'Ivoire, Cameroun, Sénégal, Mali"
+          },
+          {
+            "id": "mtn",
+            "label": "MTN Mobile Money",
+            "countries": "Cameroun, Bénin, Côte d'Ivoire, Ghana"
+          },
+          {
+            "id": "moov",
+            "label": "Moov Money",
+            "countries": "Togo (Flooz), Bénin, Côte d'Ivoire, Niger"
+          },
+          {
+            "id": "card",
+            "label": "Carte bancaire (Visa ou Mastercard)",
+            "countries": "Depuis partout dans le monde"
+          }
         ],
-        "mobileMoneyField": { "label": "Le numéro [Orange Money]", "prefill": "numéro WhatsApp", "help": "Tu recevras une demande de confirmation sur ce numéro" },
+        "mobileMoneyField": {
+          "label": "Le numéro [Orange Money]",
+          "prefill": "numéro WhatsApp",
+          "help": "Tu recevras une demande de confirmation sur ce numéro"
+        },
         "cta": "Payer 15 000 FCFA",
         "states": [
           "Paiement en cours — Confirmation envoyée au +237 6XX XX XX XX (spinner)",
@@ -112,21 +270,33 @@
         ],
         "provider": {
           "interface": "lib/payments/provider.ts",
-          "implementations": ["test (succès simulé après 3 s)", "live (FedaPay ou CinetPay)"],
+          "implementations": [
+            "test (succès simulé après 3 s)",
+            "live (FedaPay ou CinetPay)"
+          ],
           "env": "PAYMENT_MODE=test|live",
           "testNotice": "Mode test. Aucun paiement réel n'est effectué et aucune donnée bancaire n'est envoyée.",
-          "source_of_truth": "Webhook /api/payments/webhook — jamais la seule réponse du navigateur"
+          "source_of_truth": "Webhook /api/payments/webhook — jamais la seule réponse du navigateur",
+          "simulation": "Base de données (supabase/paiement.sql) : check_payment confirme 3 s après start_payment ; numéro finissant par 0000 = refus (test d'échec)"
         },
-        "deferredPayment": { "toggle": "réglage admin", "label": "Réserver et payer par dépôt / au studio", "status": "en_attente_paiement", "hold": "24 h" }
+        "deferredPayment": {
+          "toggle": "réglage admin",
+          "label": "Réserver et payer par dépôt / au studio",
+          "status": "en_attente_paiement",
+          "hold": "24 h"
+        }
       }
     ]
   },
-
   "confirmation": {
     "route": "/reserver/confirmation/[reference]",
     "title": "C'est réservé",
     "text": "Garde ce reçu. Tu peux le télécharger en PDF ou simplement en faire une capture.",
-    "reference": { "format": "OCD-JJMM-XXXX", "example": "OCD-0312-DSHX", "rule": "4 lettres aléatoires sans caractères ambigus (pas de O/0, I/1)" },
+    "reference": {
+      "format": "OCD-JJMM-XXXX",
+      "example": "OCD-0312-DSHX",
+      "rule": "4 lettres aléatoires sans caractères ambigus (pas de O/0, I/1)"
+    },
     "buttons": [
       {
         "label": "Écrire sur WhatsApp",
@@ -137,73 +307,204 @@
       {
         "label": "Télécharger le reçu (PDF A4)",
         "generation": "côté serveur, @react-pdf/renderer, route /api/receipt/[reference]",
-        "content": ["logo OCD Live", "bandeau orange « JEUDI 3 DÉCEMBRE · 12:00 À 13:30 »", "référence", "nom", "business", "catégorie", "WhatsApp", "pays", "mode (présentiel / distance)", "package", "moyen de paiement", "montant", "statut", "date d'émission", "consignes : adresse du studio ou lien de connexion, arriver 15 min avant"]
+        "content": [
+          "logo OCD Live",
+          "bandeau orange « JEUDI 3 DÉCEMBRE · 12:00 À 13:30 »",
+          "référence",
+          "nom",
+          "business",
+          "catégorie",
+          "WhatsApp",
+          "pays",
+          "mode (présentiel / distance)",
+          "package",
+          "moyen de paiement",
+          "montant",
+          "statut",
+          "date d'émission",
+          "consignes : adresse du studio ou lien de connexion, arriver 15 min avant"
+        ]
       },
-      { "label": "Réserver un autre direct", "action": "/reserver" }
+      {
+        "label": "Réserver un autre direct",
+        "action": "/reserver"
+      }
     ],
     "preview": "Aperçu du reçu sous les boutons",
     "hint": "Envoie ta référence sur WhatsApp pour qu'on prépare ton passage."
   },
-
   "notifications": {
     "trigger": "Webhook de paiement confirmé, ou validation admin en paiement différé",
     "team": {
-      "channels": ["e-mail (Resend)", "WhatsApp (API WhatsApp Business ; en attendant Telegram ou CallMeBot)"],
+      "channels": [
+        "e-mail (Resend)",
+        "WhatsApp (API WhatsApp Business ; en attendant Telegram ou CallMeBot)"
+      ],
       "template": "Nouvelle réservation OCD Live — {full_name} ({category}, {category_detail}) a réservé le {date_longue} de {debut} à {fin}, package {package}, {mode_texte}. Tél. : {whatsapp} — Paiement : {payment_method}, {payment_status}. Réf. {reference}.",
-      "mode_texte": { "presentiel": "en présentiel au studio", "distance": "à distance depuis {ville}, {pays}" },
+      "mode_texte": {
+        "presentiel": "en présentiel au studio",
+        "distance": "à distance depuis {ville}, {pays}"
+      },
       "maxDelay": "moins d'une minute après le paiement"
     },
     "vendor": [
-      { "when": "immédiatement", "channels": ["WhatsApp", "e-mail si fourni"], "content": "confirmation + lien du reçu" },
-      { "when": "la veille à 18:00 (heure de Lomé)", "channels": ["WhatsApp"], "content": "rappel du direct" },
-      { "when": "1 h avant le direct", "channels": ["WhatsApp"], "content": "adresse du studio (présentiel) ou lien de connexion (distance)" }
+      {
+        "when": "immédiatement",
+        "channels": [
+          "WhatsApp",
+          "e-mail si fourni"
+        ],
+        "content": "confirmation + lien du reçu"
+      },
+      {
+        "when": "la veille à 18:00 (heure de Lomé)",
+        "channels": [
+          "WhatsApp"
+        ],
+        "content": "rappel du direct"
+      },
+      {
+        "when": "1 h avant le direct",
+        "channels": [
+          "WhatsApp"
+        ],
+        "content": "adresse du studio (présentiel) ou lien de connexion (distance)"
+      }
     ],
     "scheduler": "Netlify Scheduled Functions ou Supabase cron, toutes les 15 minutes"
   },
-
   "admin": {
     "route": "/admin",
     "auth": "Supabase Auth (lien magique), rôle admin uniquement",
     "pages": [
-      { "name": "Tableau de bord", "content": ["lives du jour et de la semaine", "chiffre d'affaires du mois", "nombre de réservations", "catégories les plus fréquentes"] },
-      { "name": "Planning", "content": ["vues jour / semaine / mois", "chaque créneau : nom, business, mode, statut"] },
-      { "name": "Réservations", "content": ["liste filtrable (date, statut, mode, package)", "recherche par référence ou téléphone", "fiche détaillée", "changement de statut", "report vers un autre créneau", "renvoi du reçu"], "statuses": ["en_attente_paiement", "confirmée", "terminée", "annulée", "reportée"] },
-      { "name": "Ajout manuel", "content": ["réservation prise par téléphone ou WhatsApp"] },
-      { "name": "Réglages", "content": ["prix et contenu des packages", "horaires des créneaux", "jours fermés", "numéro WhatsApp et e-mails d'alerte", "mode de paiement test / live", "paiement différé on/off"] },
-      { "name": "Candidatures", "content": ["liste des candidates hôtesse", "lecture de la vidéo", "statut : nouvelle, contactée, retenue, refusée"] },
-      { "name": "Export", "content": ["Excel / CSV des réservations et des contacts vendeurs"] }
+      {
+        "name": "Tableau de bord",
+        "content": [
+          "lives du jour et de la semaine",
+          "chiffre d'affaires du mois",
+          "nombre de réservations",
+          "catégories les plus fréquentes"
+        ]
+      },
+      {
+        "name": "Planning",
+        "content": [
+          "vues jour / semaine / mois",
+          "chaque créneau : nom, business, mode, statut"
+        ]
+      },
+      {
+        "name": "Réservations",
+        "content": [
+          "liste filtrable (date, statut, mode, package)",
+          "recherche par référence ou téléphone",
+          "fiche détaillée",
+          "changement de statut",
+          "report vers un autre créneau",
+          "renvoi du reçu"
+        ],
+        "statuses": [
+          "en_attente_paiement",
+          "confirmée",
+          "terminée",
+          "annulée",
+          "reportée"
+        ]
+      },
+      {
+        "name": "Ajout manuel",
+        "content": [
+          "réservation prise par téléphone ou WhatsApp"
+        ]
+      },
+      {
+        "name": "Réglages",
+        "content": [
+          "prix et contenu des packages",
+          "horaires des créneaux",
+          "jours fermés",
+          "numéro WhatsApp et e-mails d'alerte",
+          "mode de paiement test / live",
+          "paiement différé on/off"
+        ]
+      },
+      {
+        "name": "Candidatures",
+        "content": [
+          "liste des candidates hôtesse",
+          "lecture de la vidéo",
+          "statut : nouvelle, contactée, retenue, refusée"
+        ]
+      },
+      {
+        "name": "Export",
+        "content": [
+          "Excel / CSV des réservations et des contacts vendeurs"
+        ]
+      }
     ]
   },
-
   "recruitment": {
     "route": "/recrutement",
     "title": "On recrute une hôtesse à Lomé",
     "text": "Pas besoin de diplôme : l'éloquence et le sérieux suffisent. Temps plein. Tu accompagnes les vendeurs à distance pendant leur live.",
     "fields": [
-      { "name": "full_name", "required": true },
-      { "name": "city", "required": true, "rule": "doit vivre au Togo" },
-      { "name": "whatsapp", "required": true },
-      { "name": "age", "required": true },
-      { "name": "motivation", "label": "Pourquoi toi ?", "type": "textarea court" },
-      { "name": "video", "label": "Vidéo de présentation", "rule": "30 s max, 50 Mo max, Supabase Storage" }
+      {
+        "name": "full_name",
+        "required": true
+      },
+      {
+        "name": "city",
+        "required": true,
+        "rule": "doit vivre au Togo"
+      },
+      {
+        "name": "whatsapp",
+        "required": true
+      },
+      {
+        "name": "age",
+        "required": true
+      },
+      {
+        "name": "motivation",
+        "label": "Pourquoi toi ?",
+        "type": "textarea court"
+      },
+      {
+        "name": "video",
+        "label": "Vidéo de présentation",
+        "rule": "30 s max, 50 Mo max, Supabase Storage"
+      }
     ],
     "onSubmit": "alerte à l'équipe + fiche dans l'admin"
   },
-
   "legal": {
     "privacy": {
       "route": "/confidentialite",
       "header": "Dernière mise à jour : {date}",
-      "sections": ["Qui organise (BOVA, studio OCD Live, Lomé)", "Données collectées et pourquoi (nom, business, WhatsApp, pays, paiement)", "Durée de conservation", "Droit de suppression (sur WhatsApp)", "Aucun partage commercial"]
+      "sections": [
+        "Qui organise (BOVA, studio OCD Live, Lomé)",
+        "Données collectées et pourquoi (nom, business, WhatsApp, pays, paiement)",
+        "Durée de conservation",
+        "Droit de suppression (sur WhatsApp)",
+        "Aucun partage commercial"
+      ]
     },
-    "terms": { "route": "/conditions", "sections": ["Annulation et report (délai à confirmer avec le client)", "Règles du live", "Remboursement ou avoir"] },
+    "terms": {
+      "route": "/conditions",
+      "sections": [
+        "Annulation et report (délai à confirmer avec le client)",
+        "Règles du live",
+        "Remboursement ou avoir"
+      ]
+    },
     "cookieBanner": {
       "text": "Cookies de fonctionnement uniquement.",
       "button": "OK",
       "rule": "Si Meta Pixel ou TikTok Pixel sont activés, demander le consentement AVANT de les charger"
     }
   },
-
   "database": {
     "rls": "Row Level Security partout : le public crée une réservation et lit sa confirmation par référence ; tout le reste réservé au rôle admin",
     "writes": "Disponibilité + création de réservation via une route serveur /api/bookings dans une transaction",
@@ -215,7 +516,6 @@
       "create table applications (id uuid primary key default gen_random_uuid(), full_name text, city text, whatsapp text, age int, motivation text, video_path text, status text default 'nouvelle', created_at timestamptz default now());"
     ]
   },
-
   "workOrder": [
     "1. Schéma Supabase + données de départ (packages, slots_config)",
     "2. /reserver étapes 1 à 4 (sans paiement), avec fuseau horaire et créneaux",
@@ -227,7 +527,6 @@
     "8. Paiement réel FedaPay ou CinetPay en live"
   ],
   "eachPhase": "Tester en 390 px et 1440 px, npm run build sans erreur, montrer le résultat avant la phase suivante",
-
   "acceptanceCriteria": [
     "Une réservation complète prend moins de 3 minutes sur téléphone",
     "Deux personnes ne peuvent jamais réserver le même créneau",
@@ -237,7 +536,6 @@
     "Un prix modifié dans l'admin apparaît immédiatement sur le site",
     "Aucun fichier de la page d'accueil ni de la charte n'apparaît dans le diff"
   ],
-
   "env": {
     "NEXT_PUBLIC_SITE_URL": "adresse Netlify, puis nom de domaine",
     "NUMERO_BOVA": "<NUMERO_BOVA> — WhatsApp de l'équipe",
