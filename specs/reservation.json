@@ -19,7 +19,8 @@
       "2026-11-10 : le site est hébergé sur Vercel (et non Netlify) : variables d'environnement dans Vercel ; tâches planifiées via Supabase cron ou Vercel Cron.",
       "2026-11-10 : le catalogue de la réservation (Essai, Duo, Pack 4, Annonce, Le Mois) remplace celui de l'accueil ; l'accueil lit la même table (colonnes show_on_home, position, detail, price générées pour compatibilité).",
       "2026-11-10 : numéro WhatsApp de BOVA fourni : +49 176 58443070.",
-      "2026-11-10 : paiements Orange Money, MTN, Moov et carte bancaire en SIMULATION uniquement, sans agrégateur (Wave retiré, Moov ajouté). Phase 8 (live) en attente."
+      "2026-11-10 : paiements Orange Money, MTN, Moov et carte bancaire en SIMULATION uniquement, sans agrégateur (Wave retiré, Moov ajouté). Phase 8 (live) en attente.",
+      "2026-11-10 : ajout de la deuxième offre « Annuaire des lives » (section liveDirectory, phases 9 à 11, après l'espace admin de la phase 6 dont dépend la file de validation)."
     ]
   },
   "rules": [
@@ -524,7 +525,10 @@
     "5. Notifications équipe et vendeur, puis rappels planifiés",
     "6. Espace admin",
     "7. Recrutement, confidentialité, conditions",
-    "8. Paiement réel FedaPay ou CinetPay en live"
+    "8. Paiement réel FedaPay ou CinetPay en live",
+    "9. Annuaire des lives — abonnement vendeur + paiement simulé (5 000 FCFA / mois) + lien personnel",
+    "10. Annuaire des lives — « J'envoie mon live » (ouvert pendant les créneaux) + file de validation dans l'admin",
+    "11. Annuaire des lives — page publique « Lives en cours » (filtres pays / catégorie) + fin automatique + rappels d'expiration"
   ],
   "eachPhase": "Tester en 390 px et 1440 px, npm run build sans erreur, montrer le résultat avant la phase suivante",
   "acceptanceCriteria": [
@@ -546,5 +550,170 @@
     "RESEND_API_KEY": "envoi des e-mails",
     "WHATSAPP_API_TOKEN": "API WhatsApp Business",
     "SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY": "Supabase"
+  },
+  "liveDirectory": {
+    "summary": "Deuxième offre : l'annuaire des lives. Le vendeur fait son live sur SON compte TikTok ; OCD Live le référence, le vérifie et le rend visible.",
+    "comparison": {
+      "liveStudio": {
+        "where": "Compte House of Challenge",
+        "price": "15 000 FCFA pour 1 h 30",
+        "role": "OCD Live diffuse le live",
+        "public": "Un seul live à la fois"
+      },
+      "directory": {
+        "where": "Compte TikTok du vendeur",
+        "price": "5 000 FCFA par mois (abonnement)",
+        "role": "OCD Live référence le live, le vérifie et le rend visible",
+        "public": "Tous les lives en cours, par pays et par catégorie"
+      }
+    },
+    "decisions": [
+      "2026-11-10 : deux créneaux par jour, 08:00 – 11:00 et 18:00 – 21:00, heure de Lomé (modifiables dans l'admin) ; heure locale du vendeur affichée à côté, comme pour la réservation.",
+      "2026-11-10 : un live validé reste visible jusqu'à la fin du créneau (retrait automatique) ; l'équipe peut le retirer avant à la main.",
+      "2026-11-10 : 1 live par créneau, donc 2 par jour au maximum ; un live refusé libère le créneau (le vendeur peut en renvoyer un).",
+      "2026-11-10 : refus avec motif choisi dans une liste (+ « Autre » en texte libre), affiché au vendeur et envoyé sur WhatsApp."
+    ],
+    "openQuestions": [
+      {
+        "question": "Pays couverts : toute l'Afrique, ou d'abord la zone CEMAC et l'Afrique de l'Ouest ?",
+        "defaultUntilAnswered": "Les pays de lib/booking/countries.ts (Afrique de l'Ouest, CEMAC, voisins et diaspora), activables / désactivables dans l'admin."
+      },
+      {
+        "question": "Accès « J'envoie mon live » : comment l'abonné s'identifie-t-il ?",
+        "defaultUntilAnswered": "Lien personnel secret envoyé sur WhatsApp après le paiement (pas de mot de passe) ; nouveau lien sur demande depuis la page « Mon abonnement »."
+      },
+      {
+        "question": "Lien vers l'annuaire depuis la page d'accueil ?",
+        "defaultUntilAnswered": "Aucun (règle : ne pas modifier l'accueil). Lien depuis le pied de page des pages de réservation ; l'accueil seulement si le client lève la règle."
+      }
+    ],
+    "subscription": {
+      "route": "/annuaire/abonnement",
+      "price_fcfa_per_month": 5000,
+      "fields": [
+        {
+          "name": "full_name",
+          "required": true,
+          "label": "Ton nom"
+        },
+        {
+          "name": "business_name",
+          "required": true,
+          "label": "Le nom de ton business"
+        },
+        {
+          "name": "whatsapp",
+          "required": true,
+          "label": "Ton WhatsApp",
+          "type": "phone (même sélecteur que la réservation)"
+        },
+        {
+          "name": "country",
+          "required": true,
+          "label": "Ton pays",
+          "type": "select-search"
+        },
+        {
+          "name": "category",
+          "required": true,
+          "label": "Tu vends quoi ?",
+          "options": "mêmes catégories que la réservation"
+        },
+        {
+          "name": "tiktok_handle",
+          "required": true,
+          "label": "Ton compte TikTok",
+          "placeholder": "@chezafi",
+          "validation": "@ + 2 à 24 caractères (lettres, chiffres, point, tiret bas)"
+        }
+      ],
+      "payment": "Mobile Money (Orange Money, MTN, Moov) ou carte, en SIMULATION comme la réservation (mêmes états, même mode test) ; 1 mois = 30 jours",
+      "renewal": "Pas de prélèvement automatique en Mobile Money : l'abonné repaie 5 000 FCFA ; le nouveau mois s'ajoute à la date d'expiration (pas de perte de jours s'il renouvelle en avance).",
+      "reminders": [
+        "WhatsApp 3 jours avant l'expiration",
+        "WhatsApp le jour de l'expiration"
+      ],
+      "expired": "Abonnement expiré : le formulaire « J'envoie mon live » propose de renouveler."
+    },
+    "submitForm": {
+      "route": "/annuaire/envoyer",
+      "title": "J'envoie mon live",
+      "access": "Abonnés actifs uniquement (voir openQuestions : lien personnel secret)",
+      "openOnlyDuringWindows": "Ouvert seulement pendant un créneau ; en dehors : « Prochain créneau : ce soir de 18:00 à 21:00 (soit 19:00 chez toi) »",
+      "fields": [
+        {
+          "name": "tiktok_url",
+          "required": true,
+          "label": "Le lien de ton live TikTok",
+          "validation": "https://www.tiktok.com/@compte/live, ou lien court vm.tiktok.com / vt.tiktok.com",
+          "prefill": "https://www.tiktok.com/@{tiktok_handle}/live"
+        },
+        {
+          "name": "category",
+          "required": true,
+          "prefill": "catégorie de l'abonnement, modifiable"
+        },
+        {
+          "name": "country",
+          "required": true,
+          "prefill": "pays de l'abonnement, modifiable"
+        }
+      ],
+      "afterSubmit": "« Ton live est en attente de vérification » ; statut mis à jour en direct (validé / refusé + motif)",
+      "limit": "1 live en attente ou validé par créneau"
+    },
+    "moderation": {
+      "route": "/admin/lives",
+      "queue": "Chaque lien envoyé arrive « en attente », le plus ancien en premier, avec nom, business, catégorie, pays, heure d'envoi",
+      "actions": [
+        "Ouvrir le live (nouvel onglet TikTok)",
+        "Valider",
+        "Refuser + motif",
+        "Retirer (live validé terminé avant la fin du créneau)"
+      ],
+      "rejectReasons": [
+        "Lien invalide ou introuvable",
+        "Le live n'a pas encore commencé",
+        "Contenu non conforme",
+        "Compte différent de celui de l'abonnement",
+        "Autre (texte libre)"
+      ],
+      "notify": "Validation et refus envoyés au vendeur sur WhatsApp (phase notifications)"
+    },
+    "publicPage": {
+      "route": "/lives",
+      "title": "Lives en cours",
+      "windowsBanner": "Horaires affichés en permanence : « Lives de 8 h à 11 h et de 18 h à 21 h (heure de Lomé) »",
+      "countryFilter": "Pays avec le nombre de lives en cours : « Cameroun · 20 lives » ; « Tous les pays » en premier",
+      "categoryFilter": "Mêmes catégories que la réservation",
+      "card": [
+        "nom",
+        "business",
+        "catégorie",
+        "pays (drapeau)",
+        "bouton « Voir le live sur TikTok » (nouvel onglet)"
+      ],
+      "empty": "« Aucun live en cours pour l'instant. Prochain créneau : ce soir à 18:00. »",
+      "refresh": "Mise à jour en direct (Supabase Realtime) ou toutes les 30 s"
+    },
+    "autoEnd": "Un live validé disparaît à la fin de son créneau (expires_at = fin du créneau) ou quand l'équipe le retire ; la page publique ne lit que les lives validés non expirés.",
+    "database": {
+      "rls": "Public : lecture des lives validés non expirés (vue live_directory_public) et des créneaux. Abonnés : via leur lien secret, par fonctions security definer. Tout le reste : admin.",
+      "sql": [
+        "create table directory_windows (id int primary key default 1, windows text[] default '{08:00-11:00,18:00-21:00}', timezone text default 'Africa/Lome', countries text[] default null);",
+        "create table directory_subscribers (id uuid primary key default gen_random_uuid(), full_name text not null, business_name text not null, whatsapp text not null unique, country text not null, category text not null, tiktok_handle text not null, access_token text unique not null, expires_at timestamptz, status text default 'en_attente_paiement' check (status in ('en_attente_paiement','actif','expiré','suspendu')), created_at timestamptz default now());",
+        "create table directory_payments (id uuid primary key default gen_random_uuid(), subscriber_id uuid references directory_subscribers(id) on delete cascade, amount_fcfa int not null default 5000, payment_method text, payment_phone text, payment_status text default 'pending', period_start timestamptz, period_end timestamptz, created_at timestamptz default now(), paid_at timestamptz);",
+        "create table live_submissions (id uuid primary key default gen_random_uuid(), subscriber_id uuid references directory_subscribers(id) on delete cascade, tiktok_url text not null, category text not null, country text not null, window_start timestamptz not null, window_end timestamptz not null, status text default 'en_attente' check (status in ('en_attente','validé','refusé','retiré')), reject_reason text, reviewed_at timestamptz, created_at timestamptz default now());",
+        "create unique index live_one_per_window on live_submissions (subscriber_id, window_start) where status in ('en_attente','validé');"
+      ]
+    },
+    "acceptanceCriteria": [
+      "Un vendeur s'abonne et paie 5 000 FCFA (simulation) en moins de 3 minutes sur téléphone",
+      "Hors créneau, le formulaire « J'envoie mon live » est fermé et indique le prochain créneau (heure de Lomé + heure locale)",
+      "Un abonné ne peut pas avoir deux lives en attente ou validés sur le même créneau",
+      "Un live validé apparaît sur /lives en moins de 30 s et disparaît à la fin du créneau sans intervention",
+      "Les filtres pays affichent le bon nombre de lives en cours",
+      "Un abonnement expiré ne peut plus envoyer de live"
+    ]
   }
 }
